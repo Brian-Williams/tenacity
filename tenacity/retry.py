@@ -80,8 +80,8 @@ class retry_until_exception_type(retry_if_exception):
         super(retry_until_exception_type, self).__init__(
             lambda e: not isinstance(e, exception_types))
 
-    # def __call__(self, attempt):
-    #     if attempt.failed
+    def __call__(self, attempt):
+        return self.predicate(attempt.exception())
 
 
 class retry_if_result(retry_base):
