@@ -530,6 +530,11 @@ def _retryable_test_with_not_exception_type_name_attempt_limit(thing):
     return thing.go()
 
 
+@retry(retry=tenacity.retry_until_exception_type_silent(NameError))
+def _retryable_test_with_not_exception_type_silent_name(thing):
+    return thing.go()
+
+
 @retry
 def _retryable_default(thing):
     return thing.go()
@@ -621,6 +626,15 @@ class TestDecoratorWrapper(unittest.TestCase):
         except RetryError as e:
             self.assertTrue(isinstance(e, RetryError))
             print(e)
+
+    def test_retry_until_exception_of_type_silent(self):
+        try:
+            self.assertTrue(_retryable_test_with_not_exception_type_silent_name(
+                NameErrorUntilCount(5)))
+        except NameError as e:
+            self.fail("Expected NameError to be suppressed")
+        else:
+            self.assertTrue(_retryable_test_with_not_exception_type_name.retry.statistics['attempt_number'] == 6)
 
     def test_defaults(self):
         self.assertTrue(_retryable_default(NoNameErrorAfterCount(5)))

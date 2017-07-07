@@ -15,6 +15,7 @@
 # limitations under the License.
 
 import abc
+from tenacity.error import RetryError
 
 import six
 
@@ -82,6 +83,16 @@ class retry_until_exception_type(retry_if_exception):
 
     def __call__(self, attempt):
         return self.predicate(attempt.exception())
+
+
+class retry_until_exception_type_silent(retry_until_exception_type):
+    """Retries until an exeption is raised of one or more types, then suppresses the exception."""
+    def __call__(self, attempt):
+        # only compare if we have an exception
+        if attempt.failed and attempt.exception is not RetryError:
+            return self.predicate(attempt.exception())
+        else:
+            return True
 
 
 class retry_if_result(retry_base):

@@ -28,6 +28,9 @@ import threading
 from monotonic import monotonic as now
 import six
 
+# Import all errors for easier usage
+from .error import RetryError
+
 # Import all built-in retry strategies for easier usage.
 from .retry import retry_all  # noqa
 from .retry import retry_always  # noqa
@@ -38,6 +41,7 @@ from .retry import retry_if_not_result  # noqa
 from .retry import retry_if_result  # noqa
 from .retry import retry_never  # noqa
 from .retry import retry_until_exception_type  # noqa
+from .retry import retry_until_exception_type_silent  # noqa
 
 # Import all nap strategies for easier usage.
 from .nap import sleep  # noqa
@@ -283,21 +287,6 @@ class Future(futures.Future):
         else:
             fut.set_result(value)
         return fut
-
-
-class RetryError(Exception):
-    """Encapsulates the last attempt instance right before giving up."""
-
-    def __init__(self, last_attempt):
-        self.last_attempt = last_attempt
-
-    def reraise(self):
-        if self.last_attempt.failed:
-            raise self.last_attempt.result()
-        raise self
-
-    def __str__(self):
-        return "RetryError[{0}]".format(self.last_attempt)
 
 
 if asyncio:
