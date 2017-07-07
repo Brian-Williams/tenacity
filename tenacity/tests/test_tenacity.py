@@ -606,8 +606,8 @@ class TestDecoratorWrapper(unittest.TestCase):
             self.assertTrue(_retryable_test_with_not_exception_type_name(
                 NameErrorUntilCount(5)))
         except NameError as e:
-            stats = _retryable_test_with_not_exception_type_name.retry.statistics
-            self.assertTrue(stats['attempt_number'] == 6)
+            s = _retryable_test_with_not_exception_type_name.retry.statistics
+            self.assertTrue(s['attempt_number'] == 6)
             print(e)
         else:
             self.fail("Expected NameError")
