@@ -34,10 +34,10 @@ from .retry import retry_always  # noqa
 from .retry import retry_any  # noqa
 from .retry import retry_if_exception  # noqa
 from .retry import retry_if_exception_type  # noqa
-from .retry import retry_until_exception_type  # noqa
 from .retry import retry_if_not_result  # noqa
 from .retry import retry_if_result  # noqa
 from .retry import retry_never  # noqa
+from .retry import retry_until_exception_type  # noqa
 
 # Import all nap strategies for easier usage.
 from .nap import sleep  # noqa
