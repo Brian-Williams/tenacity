@@ -606,7 +606,8 @@ class TestDecoratorWrapper(unittest.TestCase):
             self.assertTrue(_retryable_test_with_not_exception_type_name(
                 NameErrorUntilCount(5)))
         except NameError as e:
-            self.assertTrue(_retryable_test_with_not_exception_type_name.retry.statistics['attempt_number'] == 6)
+            stats = _retryable_test_with_not_exception_type_name.retry.statistics
+            self.assertTrue(stats['attempt_number'] == 6)
             print(e)
         else:
             self.fail("Expected NameError")
@@ -614,7 +615,8 @@ class TestDecoratorWrapper(unittest.TestCase):
     def test_retry_until_exception_of_type_wrong_exception(self):
         try:
             # two iterations with IOError, one that returns True
-            _retryable_test_with_not_exception_type_name_attempt_limit(IOErrorUntilCount(2))
+            _retryable_test_with_not_exception_type_name_attempt_limit(
+                IOErrorUntilCount(2))
             self.fail("Expected RetryError")
         except RetryError as e:
             self.assertTrue(isinstance(e, RetryError))
